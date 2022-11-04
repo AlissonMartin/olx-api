@@ -3,6 +3,8 @@ import * as userController from '../controllers/userController'
 import * as authController from '../controllers/authController'
 import * as adsController from '../controllers/adsController'
 import { privateAction } from '../middlewares/auth'
+
+import * as userValidator from '../validators/userValidator'
 import * as authValidator from '../validators/authValidator'
 
 
@@ -14,11 +16,11 @@ router.get('/ping', (req:Request, res:Response)=> {
 
 router.get('/states', userController.getStates)
 
-router.post('/user/signin', authController.signIn)
+router.post('/user/signin', authValidator.signIn, authController.signIn)
 router.post('/user/signup', authValidator.signUp, authController.signUp)
 
 router.get('/user/me', privateAction, userController.info)
-router.put('/user/me', privateAction,  userController.editAction)
+router.put('/user/me',userValidator.editAction, privateAction,  userController.editAction)
 
 router.get('/categories', adsController.getCategories)
 

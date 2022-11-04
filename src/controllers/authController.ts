@@ -5,6 +5,45 @@ import { Users } from '../models/users';
 import  bcrypt, { hash }  from 'bcrypt'
 
 export const signIn = async (req:Request, res:Response)=> {
+    const errors = validationResult(req)
+
+    if (!errors.isEmpty()) {
+        res.json({ error: errors.mapped() })
+        return
+    }
+
+    const data = matchedData(req)
+    
+    // Email validator
+
+    const user = await Users.findOne({where: {
+        email: data.email
+    }})
+
+    if (!user) {
+        res.json({error: 'Email e/ou senha invalidos'})
+        return
+    }
+
+    // Password Validator
+
+    const match =  await bcrypt.compare(data.password, user.passwordHash)
+    if (!match) {
+        res.json({ error: 'Email e/ou senha invalidos' })
+        return
+    }
+
+    // New token
+
+    const payload = (Date.now() + Math.random()).toString()
+    const token = await hash(payload, 10)
+
+    user.token = token
+    await user.save()
+
+    res.json({token, email: data.email})
+
+    
 
 }
 

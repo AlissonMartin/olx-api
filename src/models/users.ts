@@ -5,7 +5,7 @@ interface usersInstance extends Model {
     id: number,
     name: string,
     email: string,
-    State: string,
+    state: string,
     passwordHash: string,
     token: string
 
