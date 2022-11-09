@@ -4,15 +4,16 @@ import { sequelize } from '../instances/mysql'
 interface adsInstance extends Model {
     id: number,
     idUser: number,
-    idState: number,
-    idCategory: number,
-    images: string,
+    state: string,
+    category: string,
+    images: [object],
     dateCreated: Date,
-    tilte: string,
+    title: string,
     price: number,
-    priceNegotiable: Boolean,
+    priceNegotiable: number,
+    description: string,
     views:number,
-    status: string
+    status: number
 
 }
 
@@ -25,11 +26,11 @@ export const Ads = sequelize.define<adsInstance>('Ads', {
     idUser: {
         type: DataTypes.INTEGER
     },
-    idState: {
-        type: DataTypes.INTEGER
+    state: {
+        type: DataTypes.STRING
     },
-    idCategory: {
-        type: DataTypes.INTEGER
+    category: {
+        type: DataTypes.STRING
     },
     images: {
         type: DataTypes.STRING
@@ -46,11 +47,14 @@ export const Ads = sequelize.define<adsInstance>('Ads', {
     priceNegotiable: {
         type: DataTypes.TINYINT
     },
+    description: {
+        type: DataTypes.STRING
+    },
     views: {
         type: DataTypes.INTEGER
     },
     status: {
-        type: DataTypes.STRING
+        type: DataTypes.TINYINT
     }, 
 },
 {

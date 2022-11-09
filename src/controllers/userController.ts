@@ -29,17 +29,17 @@ export const info = async (req:Request, res:Response)=> {
         const ads = await Ads.findAll({where: { idUser: user.id}})
         for (let i in ads) { 
 
-            const cat = await Categories.findByPk(ads[i].idCategory)
+            const cat = await Categories.findByPk(ads[i].category)
             adList.push({
                 id: ads[i].id,
                 status: ads[i].status,
                 images: ads[i].images,
                 dateCreated: ads[i].dateCreated,
-                title: ads[i].tilte,
+                title: ads[i].title,
                 price: ads[i].price,
                 priceNegotiable: ads[i].priceNegotiable,
                 views: ads[i].views,
-                idCategory: cat?.id
+                category: cat?.id
             })
         }
         res.json({

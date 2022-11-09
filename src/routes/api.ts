@@ -6,7 +6,19 @@ import { privateAction } from '../middlewares/auth'
 
 import * as userValidator from '../validators/userValidator'
 import * as authValidator from '../validators/authValidator'
+import multer from "multer";
 
+const storage = multer.diskStorage({
+    destination: (req, file, cb)=> {
+        cb(null, '../tmp' )
+    },
+    filename: (req, file, cb)=> {
+        cb(null, file.fieldname+'-'+Date.now()+'.jpg')
+    }
+})
+
+
+const upload = multer({ storage: storage })
 
 const router = Router()
 
@@ -23,8 +35,7 @@ router.get('/user/me', privateAction, userController.info)
 router.put('/user/me',userValidator.editAction, privateAction,  userController.editAction)
 
 router.get('/categories', adsController.getCategories)
-
-router.post('/ad/add', privateAction, adsController.addAction)
+router.post('/ad/add', privateAction, upload.array('photos', 6), adsController.addAction)
 router.get('/ad/list', adsController.getList)
 router.get('ad/item', adsController.getItem)
 router.post('ad/:id', privateAction, adsController.editAction)
