@@ -6,8 +6,8 @@ interface adsInstance extends Model {
     idUser: number,
     state: string,
     category: string,
-    images: [object],
-    dateCreated: Date,
+    images: string,
+    dateCreated: string,
     title: string,
     price: number,
     priceNegotiable: number,
@@ -42,16 +42,19 @@ export const Ads = sequelize.define<adsInstance>('Ads', {
         type: DataTypes.STRING
     },
     price: {
-        type: DataTypes.INTEGER
+        type: DataTypes.FLOAT
     },
     priceNegotiable: {
-        type: DataTypes.TINYINT
+        type: DataTypes.TINYINT,
+        defaultValue: 0
     },
     description: {
-        type: DataTypes.STRING
+        type: DataTypes.STRING,
+        defaultValue: ''
     },
     views: {
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
+        defaultValue: 0
     },
     status: {
         type: DataTypes.TINYINT

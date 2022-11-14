@@ -10,10 +10,10 @@ import multer from "multer";
 
 const storage = multer.diskStorage({
     destination: (req, file, cb)=> {
-        cb(null, '../tmp' )
+        cb(null, './tmp' )
     },
     filename: (req, file, cb)=> {
-        cb(null, file.fieldname+'-'+Date.now()+'.jpg')
+        cb(null, file.fieldname+'-'+Math.floor(Math.random() * 99999)+Date.now()+'.jpg')
     }
 })
 
@@ -35,9 +35,9 @@ router.get('/user/me', privateAction, userController.info)
 router.put('/user/me',userValidator.editAction, privateAction,  userController.editAction)
 
 router.get('/categories', adsController.getCategories)
-router.post('/ad/add', privateAction, upload.array('photos', 6), adsController.addAction)
+router.post('/ad/add', upload.array('photos', 6), privateAction, adsController.addAction)
 router.get('/ad/list', adsController.getList)
-router.get('ad/item', adsController.getItem)
-router.post('ad/:id', privateAction, adsController.editAction)
+router.get('/ad/:id', adsController.getItem)
+router.post('/ad/:id', privateAction, adsController.editAction)
 
 export default router

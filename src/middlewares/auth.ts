@@ -5,7 +5,7 @@ import { Request, Response } from "express"
 
 export const privateAction = async (req:Request, res:Response, next:any)=> {
     
-    if (!req.query.token && !req.body.token && !req.fields?.token) {
+    if (!req.query.token && !req.body.token) {
         res.json({ notallowed: true })
         return
     } 
