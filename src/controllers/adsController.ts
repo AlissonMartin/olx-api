@@ -96,10 +96,11 @@ export const addAction = async (req: Request, res: Response) => {
 
 export const getList = async (req: Request, res: Response) => {
     let sort = (req.query.sort) ? req.query.sort : 'asc'
-    let offset:any = (req.query.offset)
+    let offset:any = (req.query.offset) ? req.query.offset : '0'
     let q = (req.query.q) ? req.query.q : ''
     let cat = req.query.cat
     let state = req.query.state
+    let limit:any = req.query.limit
     let filters:{[k: string]: any} = {status: 1}
 
     if (q) {
@@ -107,7 +108,7 @@ export const getList = async (req: Request, res: Response) => {
     }
 
     if (cat) {
-        const c = await Categories.findOne({where: {name: cat}})
+        const c = await Categories.findOne({where: {slug: cat}})
         if (c) {
             filters.category = c.name
         }
@@ -123,7 +124,7 @@ export const getList = async (req: Request, res: Response) => {
     const adsData = await Ads.findAll({
         where: filters,
         order: [['dateCreated', (sort == 'desc') ? 'DESC' : 'ASC']],
-        limit: 10,
+        limit: (limit) ? parseInt(limit) : 500,
         offset: parseInt(offset)
         })
 
