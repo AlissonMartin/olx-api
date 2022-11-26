@@ -10,7 +10,7 @@ dotenv.config()
 
 const server = express()
 server.use(express.json())
-server.use(express.static(path.join(__dirname, '../public')))
+server.use('/public', express.static(path.join(__dirname, '../public')))
 server.use(express.urlencoded({ extended: true }));
 
 

@@ -19,9 +19,9 @@ export const getCategories = async (req: Request, res: Response) => {
     const categories = []
 
     for (let i in cats) {
-        categories.push({
-            ...cats[i],
-            img: `${process.env.BASE}/assets/images/${cats[i].slug}.png`
+        categories.push({name: cats[i].name,
+            slug: cats[i].slug,
+            img: `${process.env.BASE}/public/assets/images/${cats[i].slug}.png`
         })
     }
 
@@ -97,6 +97,9 @@ export const addAction = async (req: Request, res: Response) => {
 export const getList = async (req: Request, res: Response) => {
     let sort = (req.query.sort) ? req.query.sort : 'asc'
     let offset:any = (req.query.offset) ? req.query.offset : '0'
+    let order:any = (req.query.order) ? req.query.order : 'dateCreated'
+    let status:any = (req.query.status) ? req.query.status : '1'
+    let priceNeg:any = (req.query.priceNeg) 
     let q = (req.query.q) ? req.query.q : ''
     let cat = req.query.cat
     let state = req.query.state
@@ -120,10 +123,20 @@ export const getList = async (req: Request, res: Response) => {
             filters.state = s.name
         }
     }
+
+    if (priceNeg) {
+        parseInt(priceNeg)
+        filters.priceNegotiable = priceNeg
+    }
+
+    parseInt(status)
+
+    filters.status = status
     
+    console.log(filters)
     const adsData = await Ads.findAll({
         where: filters,
-        order: [['dateCreated', (sort == 'desc') ? 'DESC' : 'ASC']],
+        order: [[order, (sort == 'desc') ? 'DESC' : 'ASC']],
         limit: (limit) ? parseInt(limit) : 500,
         offset: parseInt(offset)
         })
