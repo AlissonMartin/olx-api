@@ -31,7 +31,6 @@ export const getCategories = async (req: Request, res: Response) => {
 }
 
 export const addAction = async (req: Request, res: Response) => {
-    console.log(req.files)
     let title = req.body.title
     let price =  req.body.price
     let desc = req.body.desc 
@@ -82,10 +81,10 @@ export const addAction = async (req: Request, res: Response) => {
         newAd.views = 0
         newAd.images = images.toString()
 
-        newAd.save()
+        const info = await newAd.save()
         
-
-        res.json({title,price,desc,cat,token,images, priceNeg})
+        
+        res.json({id: info.id, title,price,desc,cat,token,images, priceNeg})
 
     } else {
         res.json({err: 'Usuário não encontrado'})
@@ -177,6 +176,8 @@ export const getItem = async (req: Request, res: Response) => {
 
     let user = await Users.findByPk(ad.idUser)
 
+    let cat = await Categories.findOne({where: {name: ad.category}})
+
     res.json({
         id:ad.id,
         title: ad.title,
@@ -186,7 +187,7 @@ export const getItem = async (req: Request, res: Response) => {
         dateCreated: ad.dateCreated,
         views: ad.views,
         images,
-        category: ad.category,
+        category: cat?.slug,
         userInfo: {
             name: user?.name,
             email: user?.email

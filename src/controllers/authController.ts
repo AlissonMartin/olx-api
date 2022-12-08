@@ -28,6 +28,7 @@ export const signIn = async (req:Request, res:Response)=> {
     // Password Validator
 
     const match =  await bcrypt.compare(data.password, user.passwordHash)
+    console.log(match)
     if (!match) {
         res.json({ error: 'Email e/ou senha invalidos' })
         return
@@ -77,6 +78,7 @@ export const signUp = async (req:Request, res:Response)=> {
    // Password 
 
    const passwordHash = await hash(data.password, 10)
+   console.log(passwordHash)
 
    // Token
 
