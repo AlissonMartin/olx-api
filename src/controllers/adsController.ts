@@ -105,6 +105,8 @@ export const getList = async (req: Request, res: Response) => {
     let limit:any = req.query.limit
     let filters:{[k: string]: any} = {status: 1}
 
+
+
     if (q) {
         filters.title = {[Op.like]: `%${q}%`}
     }
@@ -131,8 +133,13 @@ export const getList = async (req: Request, res: Response) => {
     parseInt(status)
 
     filters.status = status
+
     
     console.log(filters)
+
+    const totalAds = await Ads.findAll({where: filters})
+    const total = totalAds.length
+
     const adsData = await Ads.findAll({
         where: filters,
         order: [[order, (sort == 'desc') ? 'DESC' : 'ASC']],
@@ -142,6 +149,7 @@ export const getList = async (req: Request, res: Response) => {
 
 
     let ads = []
+
 
     for (let i in adsData) {
         let images = adsData[i].images.split(',')
@@ -155,7 +163,7 @@ export const getList = async (req: Request, res: Response) => {
         })
     }
 
-    res.json({ads})
+    res.json({ads, total})
 }
 
 export const getItem = async (req: Request, res: Response) => {
