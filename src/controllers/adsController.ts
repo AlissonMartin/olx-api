@@ -7,8 +7,6 @@ import sharp from 'sharp'
 import fs from 'fs'
 import {Op} from 'sequelize'
 import { States } from '../models/states'
-import { off } from 'process'
-import { userInfo } from 'os'
 
 
 dotenv.config()
@@ -103,7 +101,7 @@ export const getList = async (req: Request, res: Response) => {
     let cat = req.query.cat
     let state = req.query.state
     let limit:any = req.query.limit
-    let filters:{[k: string]: any} = {status: 1}
+    let filters:{[k: string]: any} = {status: req.query.status ? req.query.status : 1}
 
 
 
@@ -159,7 +157,8 @@ export const getList = async (req: Request, res: Response) => {
             title: adsData[i].title,
             price: adsData[i].price,
             priceNegotiable: (adsData[i].priceNegotiable === 1) ?  true : false,
-            image: `./public/media/${defaultImage}`
+            image: `./public/media/${defaultImage}`,
+            state: adsData[i].state
         })
     }
 

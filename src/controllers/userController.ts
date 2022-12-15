@@ -21,19 +21,20 @@ export const getStates = async(req:Request, res:Response)=> {
 export const info = async (req:Request, res:Response)=> {
     let adList = []
     let token = req.query.token
+    let status = req.query.status ? req.query.status : 1
 
     const user = await Users.findOne({where: {token}})
 
     if (user) {
         const state = await States.findOne({where: {name: user.state}})
-        const ads = await Ads.findAll({where: { idUser: user.id}})
+        const ads = await Ads.findAll({where: { idUser: user.id, status: status}})
         for (let i in ads) { 
 
             const cat = await Categories.findByPk(ads[i].category)
             adList.push({
                 id: ads[i].id,
                 status: ads[i].status,
-                images: ads[i].images,
+                images: `./public/media/${ads[i].images}`,
                 dateCreated: ads[i].dateCreated,
                 title: ads[i].title,
                 price: ads[i].price,
