@@ -32,7 +32,7 @@ router.post('/user/signin', authValidator.signIn, authController.signIn)
 router.post('/user/signup', authValidator.signUp, authController.signUp)
 
 router.get('/user/me', privateAction, userController.info)
-router.put('/user/me',userValidator.editAction, privateAction,  userController.editAction)
+router.put('/user/me', upload.single('photo') ,userValidator.editAction, privateAction,  userController.editAction)
 
 router.get('/categories', adsController.getCategories)
 router.post('/ad/add', upload.array('photos', 6), privateAction, adsController.addAction)

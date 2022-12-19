@@ -5,6 +5,8 @@ import { States } from '../models/states'
 import { Users } from '../models/users'
 import { validationResult, matchedData } from "express-validator";
 import bcrypt from 'bcrypt'
+import sharp from 'sharp'
+import fs from 'fs'
 
 type updatesType = {
     name?: string,
@@ -28,13 +30,17 @@ export const info = async (req:Request, res:Response)=> {
     if (user) {
         const state = await States.findOne({where: {name: user.state}})
         const ads = await Ads.findAll({where: { idUser: user.id, status: status}})
-        for (let i in ads) { 
 
+
+        for (let i in ads) { 
+            let images = ads[i].images.split(',')
+            let defaultImage = images[0]
             const cat = await Categories.findByPk(ads[i].category)
+
             adList.push({
                 id: ads[i].id,
                 status: ads[i].status,
-                images: `./public/media/${ads[i].images}`,
+                image: `./public/media/${defaultImage}`,
                 dateCreated: ads[i].dateCreated,
                 title: ads[i].title,
                 price: ads[i].price,
@@ -47,6 +53,7 @@ export const info = async (req:Request, res:Response)=> {
             name: user.name,
             email: user.email,
             state: state?.name,
+            photo: `./public/media/${user.photo}`,
             ads: adList
         })
     }
@@ -66,8 +73,8 @@ export const editAction = async (req: Request, res: Response) => {
     }
 
     const data = matchedData(req)
-
     const user = await Users.findOne({where: {token: data.token}})
+    const file = req.file
 
     if (user) {
         
@@ -100,7 +107,20 @@ export const editAction = async (req: Request, res: Response) => {
             user.passwordHash = await bcrypt.hash(data.password, 10)
         }
 
+        if(file)  {
+            await sharp(file.path).resize(500, 500).toFile(`./public/media/${file.filename}`)
+            fs.unlink(`./tmp/${file.filename}`, (err) => {
+                if (err) {
+                    console.log('It failed')
+                } else {
+                    console.log('successfully deleted')
+                }
+            })
+            user.photo = file.filename
+        }
         user.save()
+
+        res.json({})
 
     }
 

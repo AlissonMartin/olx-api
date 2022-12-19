@@ -29,5 +29,5 @@ export const editAction = checkSchema({
         optional: true,
         notEmpty: true,
         errorMessage: 'Estado não preenchido'
-    }
+    },
 })
