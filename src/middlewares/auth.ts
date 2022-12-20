@@ -4,6 +4,7 @@ import {Users} from '../models/users'
 import { Request, Response } from "express"
 
 export const privateAction = async (req:Request, res:Response, next:any)=> {
+    console.log(req.body)
     
     if (!req.query.token && !req.body.token) {
         res.json({ notallowed: true })
@@ -13,8 +14,6 @@ export const privateAction = async (req:Request, res:Response, next:any)=> {
 
     let token = ''
     
-    
-
     if (req.query.token) {
         token = req.query.token as any
     }
@@ -30,8 +29,6 @@ export const privateAction = async (req:Request, res:Response, next:any)=> {
         res.json({ notallowed: true })
         return
     }
-
-    console.log(token)
 
     const user = await Users.findOne({where: {token}})
 

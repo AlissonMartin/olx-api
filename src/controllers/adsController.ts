@@ -266,11 +266,33 @@ export const editAction = async (req: Request, res: Response) => {
     await ad.save()
 
     res.json('Atualizado com sucesso')
+}
+
+export const deleteAction = async (req:Request, res:Response)=> {
+    const id = req.params.id
+    const token = req.body.token
+
+    const ad = await Ads.findByPk(id)
+    const user = await Users.findOne({where: {token}})
 
 
 
-    
+    if (!ad) {
+        res.json('O anúncio não existe')
+        return
+    }
 
+    if (!user) {
+        res.json('O usuário não existe')
+        return
+    }
 
+    if (ad.idUser !== user.id) {
+        res.json('Você não tem permissão')
+        return
+    }
 
+    ad.destroy()
+
+    res.json('Anúncio deletado')
 }

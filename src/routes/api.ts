@@ -39,5 +39,6 @@ router.post('/ad/add', upload.array('photos', 6), privateAction, adsController.a
 router.get('/ad/list', adsController.getList)
 router.get('/ad/:id', adsController.getItem)
 router.post('/ad/:id', privateAction, adsController.editAction)
+router.delete('/ad/:id', privateAction, adsController.deleteAction)
 
 export default router
